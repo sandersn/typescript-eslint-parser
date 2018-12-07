@@ -11,6 +11,32 @@ const Scope = require("eslint-scope/lib/scope").Scope;
 const fallback = require("eslint-visitor-keys").getKeys;
 const childVisitorKeys = require("./visitor-keys");
 
+/** @typedef {import("estree").Identifier} Identifier */
+/** @typedef {import("estree").ClassDeclaration} ClassDeclaration */
+/** @typedef {import("estree").ClassExpression} ClassExpression */
+/** @typedef {import("estree").CallExpression} CallExpression */
+/** @typedef {import("estree").NewExpression} NewExpression */
+/** @typedef {import("estree").MethodDefinition} MethodDefinition */
+/** @typedef {import("estree").VariableDeclaration} VariableDeclaration */
+/** @typedef {import("estree").FunctionDeclaration} FunctionDeclaration */
+/** @typedef {import("estree").FunctionExpression} FunctionExpression */
+/** @typedef {import("estree").ArrowFunctionExpression} ArrowFunctionExpression */
+/** @typedef {any} TSEmptyBodyFunctionDeclaration */
+/** @typedef {any} TSEmptyBodyFunctionExpression */
+/** @typedef {any} TSInterfaceDeclaration */
+/** @typedef {any} TSTypeAnnotation */
+/** @typedef {any} TSTypeQuery */
+/** @typedef {any} TSTypeParameterDeclaration */
+/** @typedef {any} TSPropertySignature */
+/** @typedef {any} TSMethodSignature */
+/** @typedef {any} TSEnumDeclaration */
+/** @typedef {any} TSEnumMember */
+/** @typedef {any} TSModuleDeclaration */
+/** @typedef {any} TSAbstractClassDeclaration */
+/** @typedef {any} TSModuleBlock */
+/** @typedef {any} TSImportEqualsDeclaration */
+/** @typedef {any} TS */
+
 /**
  * Define the override function of `Scope#__define` for global augmentation.
  * @param {Function} define The original Scope#__define method.
