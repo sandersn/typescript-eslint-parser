@@ -11,17 +11,36 @@ const Scope = require("eslint-scope/lib/scope").Scope;
 const fallback = require("eslint-visitor-keys").getKeys;
 const childVisitorKeys = require("./visitor-keys");
 
+/** @typedef {{
+ *      typeAnnotation: unknown,
+ *      decorators: unknown[]
+ * }} TSIdentifier */
+/** @typedef {{
+ *      decorators: unknown[],
+ * }} TSMethod */
+/** @typedef {{
+ *      implements: unknown,
+ *      decorators: unknown[],
+ *      superTypeParameters: unknown[]
+ * }} TSClass */
+/** @typedef {{
+ *      id: { name: unknown },
+ *      typeParameters: unknown[],
+ *      returnType: unknown
+ * }} TSFunction */
+/** @typedef {{ kind: "type" }} TSVariableDeclaration */
 /** @typedef {unknown} Decorator */
-/** @typedef {import("estree").Identifier} Identifier */
-/** @typedef {import("estree").ClassDeclaration} ClassDeclaration */
-/** @typedef {import("estree").ClassExpression} ClassExpression */
+/** @typedef {import("estree").Identifier & TSIdentifier} Identifier */
+/** @typedef {import("estree").Pattern} Pattern */
+/** @typedef {import("estree").ClassDeclaration & TSClass} ClassDeclaration */
+/** @typedef {import("estree").ClassExpression & TSClass} ClassExpression */
 /** @typedef {import("estree").CallExpression} CallExpression */
 /** @typedef {import("estree").NewExpression} NewExpression */
-/** @typedef {import("estree").MethodDefinition} MethodDefinition */
-/** @typedef {import("estree").VariableDeclaration} VariableDeclaration */
-/** @typedef {import("estree").FunctionDeclaration} FunctionDeclaration */
-/** @typedef {import("estree").FunctionExpression} FunctionExpression */
-/** @typedef {import("estree").ArrowFunctionExpression} ArrowFunctionExpression */
+/** @typedef {import("estree").MethodDefinition & TSMethod} MethodDefinition */
+/** @typedef {import("estree").VariableDeclaration | TSVariableDeclaration} VariableDeclaration */
+/** @typedef {import("estree").FunctionDeclaration & TSFunction} FunctionDeclaration */
+/** @typedef {import("estree").FunctionExpression & TSFunction} FunctionExpression */
+/** @typedef {import("estree").ArrowFunctionExpression & TSFunction} ArrowFunctionExpression */
 /** @typedef {{
  *     id: { name: unknown },
  *     typeParameters: unknown,
@@ -77,7 +96,7 @@ const childVisitorKeys = require("./visitor-keys");
  *    global: unknown,
  *    body: { body: unknown[] },
  * }} TSModuleDeclaration */
-/** @typedef {unknown} TSAbstractClassDeclaration */
+/** @typedef {TSClass} TSAbstractClassDeclaration */
 /** @typedef {unknown} TSModuleBlock */
 /** @typedef {{
  *    name: { type: unknown },
@@ -150,7 +169,7 @@ class Referencer extends OriginalReferencer {
 
     /**
      * Override to use PatternVisitor we overrode.
-     * @param {Identifier} node The Identifier node to visit.
+     * @param {Pattern} node The Identifier node to visit.
      * @param {Object} [options] The flag to visit right-hand side nodes.
      * @param {{ (p: any, options: Options): void; }} callback The callback function for left-hand side nodes.
      * @returns {void}
