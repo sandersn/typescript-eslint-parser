@@ -110,6 +110,7 @@ class EnumScope extends Scope {
 }
 
 class PatternVisitor extends OriginalPatternVisitor {
+    /** @param {TSNode} node */
     Identifier(node) {
         super.Identifier(node);
         if (node.decorators) {
@@ -151,7 +152,7 @@ class Referencer extends OriginalReferencer {
      * Override to use PatternVisitor we overrode.
      * @param {Identifier} node The Identifier node to visit.
      * @param {Object} [options] The flag to visit right-hand side nodes.
-     * @param {Function} callback The callback function for left-hand side nodes.
+     * @param {{ (p: any, options: Options): void; }} callback The callback function for left-hand side nodes.
      * @returns {void}
      */
     visitPattern(node, options, callback) {

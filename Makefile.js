@@ -33,7 +33,7 @@ const OPEN_SOURCE_LICENSES = [
 /**
  * Generates a function that matches files with a particular extension.
  * @param {string} extension The file extension (i.e. "js")
- * @returns {Function} The function to pass into a filter method.
+ * @returns {(value: string) => boolean} The function to pass into a filter method.
  * @private
  */
 function fileType(extension) {
