@@ -11,9 +11,10 @@ const Scope = require("eslint-scope/lib/scope").Scope;
 const fallback = require("eslint-visitor-keys").getKeys;
 const childVisitorKeys = require("./visitor-keys");
 
+/** @typedef {import("estree").Node} Node */
 /** @typedef {{
  *      typeAnnotation: unknown,
- *      decorators: unknown[]
+ *      decorators: import("estree").Expression[]
  * }} TSIdentifier */
 /** @typedef {{
  *      decorators: unknown[],
@@ -41,6 +42,7 @@ const childVisitorKeys = require("./visitor-keys");
 /** @typedef {import("estree").FunctionDeclaration & TSFunction} FunctionDeclaration */
 /** @typedef {import("estree").FunctionExpression & TSFunction} FunctionExpression */
 /** @typedef {import("estree").ArrowFunctionExpression & TSFunction} ArrowFunctionExpression */
+/** @typedef {import("estree").ArrayExpression & TSIdentifier} TSArrayExpression */
 /** @typedef {{
  *     id: { name: unknown },
  *     typeParameters: unknown,
@@ -83,7 +85,7 @@ const childVisitorKeys = require("./visitor-keys");
  *    typeAnnotation: unknown,
  *    initializer: unknown
  *  }} TSMethodSignature */
-/** @typedef {{
+/** @typedef {Node & {
  *    id: { name: unknown },
  *    members: unknown[],
  *  }} TSEnumDeclaration */
@@ -106,11 +108,12 @@ const childVisitorKeys = require("./visitor-keys");
 
 /**
  * Define the override function of `Scope#__define` for global augmentation.
- * @param {Function} define The original Scope#__define method.
- * @returns {Function} The override function.
+ * @param {(node: Node, definition: unknown) => void} define The original Scope#__define method.
+ * @returns {(node: Node, definition: unknown) => void} The override function.
  */
 function overrideDefine(define) {
-    return /* @this {Scope} */ function(node, definition) {
+    /* @this {Scope} */
+    const f = function(node, definition) {
         define.call(this, node, definition);
 
         // Set `variable.eslintUsed` to tell ESLint that the variable is exported.
@@ -119,12 +122,20 @@ function overrideDefine(define) {
             variable.eslintUsed = true;
         }
     };
+    return f;
 }
 
-/** The scope class for enum. */
+/**
+ * The scope class for enum.
+ */
 class EnumScope extends Scope {
+    /**
+     * @param {import("eslint-scope/lib/scope-manager").ScopeManager} scopeManager
+     * @param {Scope} upperScope
+     * @param {import("estree").Node} block
+     */
     constructor(scopeManager, upperScope, block) {
-        super(scopeManager, "enum", upperScope, block, false);
+        super(scopeManager, /** @type {import("eslint-scope/lib/scope").Type} */("enum"), upperScope, block, false);
     }
 }
 
@@ -140,6 +151,7 @@ class PatternVisitor extends OriginalPatternVisitor {
         }
     }
 
+    /** @param {TSArrayExpression} node */
     ArrayPattern(node) {
         node.elements.forEach(this.visit, this);
         if (node.decorators) {
@@ -724,7 +736,12 @@ class Referencer extends OriginalReferencer {
     }
 }
 
-module.exports = function(ast, parserOptions, extraOptions) {
+module.exports = /**
+ * @param {{ sourceType: string; }} ast
+ * @param {{ ecmaFeatures: { globalReturn: boolean; }; ecmaVersion: number; }} parserOptions
+ * @param {{ sourceType: string; }} extraOptions
+ */
+ function(ast, parserOptions, extraOptions) {
     const options = {
         ignoreEval: true,
         optimistic: false,
