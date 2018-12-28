@@ -11,6 +11,17 @@ const Scope = require("eslint-scope/lib/scope").Scope;
 const fallback = require("eslint-visitor-keys").getKeys;
 const childVisitorKeys = require("./visitor-keys");
 
+/** @typedef {import("estree").Identifier} Identifier */
+/** @typedef {import("estree").ClassDeclaration} ClassDeclaration */
+/** @typedef {import("estree").ClassExpression} ClassExpression */
+/** @typedef {import("estree").CallExpression} CallExpression */
+/** @typedef {import("estree").NewExpression} NewExpression */
+/** @typedef {import("estree").MethodDefinition} MethodDefinition */
+/** @typedef {import("estree").VariableDeclaration} VariableDeclaration */
+/** @typedef {import("estree").FunctionDeclaration} FunctionDeclaration */
+/** @typedef {import("estree").FunctionExpression} FunctionExpression */
+/** @typedef {import("estree").ArrowFunctionExpression} ArrowFunctionExpression */
+
 /**
  * Define the override function of `Scope#__define` for global augmentation.
  * @param {Function} define The original Scope#__define method.
