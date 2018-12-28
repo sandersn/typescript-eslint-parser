@@ -12,6 +12,7 @@ const fallback = require("eslint-visitor-keys").getKeys;
 const childVisitorKeys = require("./visitor-keys");
 
 /** @typedef {import("estree").Identifier} Identifier */
+/** @typedef {import("estree").Pattern} Pattern */
 /** @typedef {import("estree").ClassDeclaration} ClassDeclaration */
 /** @typedef {import("estree").ClassExpression} ClassExpression */
 /** @typedef {import("estree").CallExpression} CallExpression */
@@ -148,9 +149,9 @@ class Referencer extends OriginalReferencer {
 
     /**
      * Override to use PatternVisitor we overrode.
-     * @param {Identifier} node The Identifier node to visit.
+     * @param {Pattern} node The Identifier node to visit.
      * @param {Object} [options] The flag to visit right-hand side nodes.
-     * @param {Function} callback The callback function for left-hand side nodes.
+     * @param {(p: any, options: Options) => void} callback The callback function for left-hand side nodes.
      * @returns {void}
      */
     visitPattern(node, options, callback) {

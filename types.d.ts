@@ -1,10 +1,10 @@
+type Options = {
+    topLevel: boolean;
+    rest: boolean;
+    assignments: any[];
+};
 declare module "eslint-scope/lib/pattern-visitor" {
     import { Node, Expression, SpreadElement } from "estree";
-    type Options = {
-        topLevel: boolean;
-        rest: boolean;
-        assignments: any[];
-    };
     class PatternVisitor {
         constructor(
             options: any,
